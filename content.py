@@ -23,7 +23,7 @@ def mean_squared_error(x, y, w):
     for i in range(values.shape[0]):
         mean_error += (np.square(y[i]-values[i]))
     mean_error = mean_error/values.shape[0]
-    return mean_error
+    return float(mean_error)
 
 
 def design_matrix(x_train, M):
@@ -34,7 +34,7 @@ def design_matrix(x_train, M):
     '''
     matrix = np.zeros(shape=(M+1, x_train.shape[0]))
     for j in range(M+1):
-        for i in range(0,x_train.shape[0]):
+        for i in range(x_train.shape[0]):
             matrix[j][i]=x_train[i]**j
     return(matrix.T)
     #pass
@@ -66,7 +66,7 @@ def regularized_least_squares(x_train, y_train, M, regularization_lambda):
     '''
     
     phi = design_matrix(x_train, M)
-    w = (np.linalg.inv(phi.T.dot(phi)+(regularization_lambda*np.ones()))).dot(phi.T).dot(y_train)
+    w = (np.linalg.inv(phi.T.dot(phi)+(regularization_lambda*np.eye(phi.shape[1])))).dot(phi.T).dot(y_train)
     err = mean_squared_error(x_train, y_train, w)
     return (w,err)
     #pass
