@@ -83,6 +83,16 @@ def model_selection(x_train, y_train, x_val, y_val, M_values):
     tj. daje najmniejszy blad na ciagu walidacyjnym, train_err i val_err to bledy na sredniokwadratowe na ciagach treningowym
     i walidacyjnym
     '''
+    params = []
+    for M in M_values:
+        params.append(least_squares(x_train,y_train,M)[0])
+    val_error = mean_squared_error(x_val, y_val, params[0])
+    best_param = params[0]
+    for param in params:
+        if(mean_squared_error(x_val,y_val,param)<val_error):
+            val_error = mean_squared_error(x_val,y_val,param)
+            best_param = param
+    return(best_param, mean_squared_error(x_train, y_train, best_param), val_error)
     pass
 
 
@@ -98,4 +108,16 @@ def regularized_model_selection(x_train, y_train, x_val, y_val, M, lambda_values
     tj. daje najmniejszy blad na ciagu walidacyjnym. Wielomian dopasowany jest wg kryterium z regularyzacja. train_err i val_err to
     bledy na sredniokwadratowe na ciagach treningowym i walidacyjnym. regularization_lambda to najlepsza wartosc parametru regularyzacji
     '''
+    params = []
+    for lamb in lambda_values:
+        params.append(regularized_least_squares(x_train, y_train, M, lamb)[0])
+    val_error = mean_squared_error(x_val, y_val, params[0])
+    best_lambda = lambda_values[0]
+    best_param = params[0]
+    for i in range(len(lambda_values)):
+        if(mean_squared_error(x_val, y_val, params[i])<val_error):
+            val_error = mean_squared_error(x_val, y_val, params[i])
+            best_param = params[i]
+            best_lambda = lambda_values[i]
+    return(best_param, mean_squared_error(x_train, y_train, best_param), val_error, best_lambda)
     pass
